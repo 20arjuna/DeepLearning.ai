@@ -1,31 +1,54 @@
 import numpy as np
-from utils import *
-import math
+from NueralNets.utils import dot_product, sigmoid
+
 
 def load_data(filename):
     return np.genfromtxt(filename, delimiter=',')
 
+'''
+Makes a prediction given some inputs, weights, and bias
+
+@param X 
+        The inputs dim=(features,)
+@param w 
+        The weights dim=(features,)
+@param b 
+        The bias
+
+@return The prediction
+'''
 def predict(X, w, b):
     z = dot_product(X, w) + b
     yhat = sigmoid(z)
 
-    if(yhat >= 0.5):
-        return 1.0
-    else:
-        return 0.0
-
-'''
-Calculates the loss for a given prediction 
-'''
-def get_loss(yhat, y):
-    loss = -1 * ( y * np.log(yhat) + (1 - y) * (np.log(1 - yhat)) )
-    return loss
+    # if(yhat >= 0.5):
+    #     return 1.0
+    # else:
+    #     return 0.0
+    return yhat
 
 ''' 
-Calculates the derivatives
+Calculates the partial derivatives of loss with respect 
+to weights and bias. (dw, db)
+
+@param w 
+        The weights array. 
+        Has the same length as there are features
+        dim=(features,)
+@param b 
+        The bias
+@param X 
+        The input array                 
+        dim=(features,)
+@param Y 
+        The expected output
+@return gradients
+         A dictionary containing (dw,db)
+         The gradients with respect to weights and bias
+@return cost
+         The loss function averaged over the number of training examples
 '''
 def backprop(w, b, X, Y):
-    #print(X)
     A = sigmoid(dot_product(w, X) + b)
     m = len(X)
 
@@ -48,15 +71,31 @@ def backprop(w, b, X, Y):
 '''
 Updates the weights and biases
 
-@return w the updates weights array
-@return b the updated bias
+@param w 
+        The weights array
+        dim=(features,)
+@param b
+        The bias
+@param X
+        The input array
+        dim=(features,m)
+@param Y
+        The expected output array
+        dim=(m,)
+@param iterations
+        The number of training iterations
+@param alpha
+        The learning rate
+@return w 
+         the updated weights array
+@return b 
+         the updated bias
 '''
 def gradient_descent(w, b, X, Y, iterations, alpha):
     features = len(w)
-    print(X[0])
-    print(type(X[0]))
-    print(X[0].shape)
+
     for i in range(iterations):
+        #print("iteration #: " + str(i))
         gradients, cost = backprop(w, b, X[i], Y[i])
 
         dw = gradients["dw"]
@@ -66,8 +105,7 @@ def gradient_descent(w, b, X, Y, iterations, alpha):
         for i in range(features):
             w[i] -= alpha * dw[i]
 
-        if(i%100 == 0):
-            print("Cost after iteration #" + str(i) + ": " + str(cost))
+        print("Cost after iteration #" + str(i) + ": " + str(cost))
 
     return w, b
 
@@ -75,17 +113,12 @@ if __name__ == '__main__':
     myFile = load_data('pima-indians-diabetes.csv')
 
     X_train = myFile[:384,:-1]
-    #print(X_train[0])
     Y_train = myFile[:384, -1]
-    #print(Y_train[0])
 
     X_test = myFile[384:,:-1]
-    #print(X_test[0])
     Y_test = myFile[384:, -1]
-    #print(Y_test[0])
 
     features = len(X_train[0])
-
 
     test_no = 5
     print(X_test[test_no])
