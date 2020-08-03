@@ -14,7 +14,7 @@ def predict(X, w, b):
 Calculates the loss for a given prediction 
 '''
 def get_loss(yhat, y):
-    loss = -1 * ( y * math.log(yhat) + (1 - y) * (math.log(1 - yhat)) )
+    loss = -1 * ( y * np.log(yhat) + (1 - y) * (np.log(1 - yhat)) )
     return loss
 
 ''' 
@@ -51,15 +51,16 @@ if __name__ == '__main__':
     features = len(X_train[0])
     m = len(X_train)
 
-    print(X_test[1])
-    print(Y_test[1])
+    test_no = 5
+    print(X_test[test_no])
+    print(Y_test[test_no])
 
     w = np.zeros(features)
     b = np.random.random()
 
     print("\n" + "weights: " + str(w))
     print("bias: " + str(b))
-    print("sample prediction: " + str(predict(X_test[1], w, b)))
+    print("sample prediction: " + str(predict(X_test[test_no], w, b)))
 
     dw = np.zeros(features)
     db = 0
@@ -67,29 +68,32 @@ if __name__ == '__main__':
     for iter in range(100):
         for i in range(m):
             yhat = predict(X_train[i], w, b)
-            if(yhat == Y_train[i]):
-                break
-            loss = get_loss(yhat, Y_train[i])
-            dz = yhat - loss
+            if(yhat != 1.0 and yhat != 0.0):
+                print("yhat: " + str(yhat))
+                print("Y_train[i]" + str(Y_train[i]))
+                print()
+                loss = get_loss(yhat, Y_train[i])
+                print("\n" + "loss: " + str(loss))
+                dz = yhat - loss
 
-            for j in range(features):
-                dw[j] = X_train[i][j] * dz
-            db = dz
+                for j in range(features):
+                    dw[j] += X_train[i][j] * dz
+                db += dz
 
-        loss /= m
-        dw /= m
-        db /= m
+            loss /= m
+            dw /= m
+            db /= m
 
-        for i in range(features):
-            w[i] -= (alpha * dw[i])
+            for i in range(features):
+                w[i] -= (alpha * dw[i])
 
-        b -= (alpha * db)
-        #print("reached here")
+            b -= (alpha * db)
+            # print("REACHED HERE" + "\n")
 
     print()
     print("weights: " + str(w))
     print("bias: " + str(b))
-    print("prediction: " + str(predict(X_test[1], w, b)))
+    print("prediction: " + str(predict(X_test[test_no], w, b)))
 
 
 
