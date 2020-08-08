@@ -18,7 +18,7 @@ Makes a prediction given some inputs, weights, and bias
 @return The prediction
 '''
 def predict(X, w, b):
-    z = np.dot(X, w) + b
+    z = np.dot(w, X) + b
     yhat = sigmoid(z)
 
     # if(yhat >= 0.5):
@@ -93,17 +93,18 @@ Updates the weights and biases
 '''
 def gradient_descent(w, b, X, Y, iterations, alpha):
     features = len(w)
-
+    #print(X.shape)
     for i in range(iterations):
-        #print("iteration #: " + str(i))
-        gradients, cost = backprop(w, b, X[i], Y[i])
+        for k in range(X.shape[0]):
+            #print("iteration #: " + str(i))
+            gradients, cost = backprop(w, b, X[k], Y[k])
 
-        dw = gradients["dw"]
-        db = gradients["db"]
+            dw = gradients["dw"]
+            db = gradients["db"]
 
-        b -= alpha * db
-        for i in range(features):
-            w[i] -= alpha * dw[i]
+            b -= alpha * db
+            for j in range(features):
+                w[j] -= alpha * dw[j]
 
         print("Cost after iteration #" + str(i) + ": " + str(cost))
 
@@ -120,11 +121,11 @@ if __name__ == '__main__':
 
     features = len(X_train[0])
 
-    test_no = 5
+    test_no = 2
     print(X_test[test_no])
     print(Y_test[test_no])
 
-    w = np.zeros(features)
+    w = np.random.randn(features)
     b = 0
 
     print("\n" + "weights: " + str(w))
