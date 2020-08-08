@@ -1,5 +1,5 @@
 import numpy as np
-from NueralNets.utils import dot_product, sigmoid
+from NueralNets.utils import sigmoid
 
 
 def load_data(filename):
@@ -18,7 +18,7 @@ Makes a prediction given some inputs, weights, and bias
 @return The prediction
 '''
 def predict(X, w, b):
-    z = dot_product(X, w) + b
+    z = np.dot(X, w) + b
     yhat = sigmoid(z)
 
     # if(yhat >= 0.5):
@@ -49,7 +49,7 @@ to weights and bias. (dw, db)
          The loss function averaged over the number of training examples
 '''
 def backprop(w, b, X, Y):
-    A = sigmoid(dot_product(w, X) + b)
+    A = sigmoid(np.dot(w, X) + b)
     m = len(X)
 
     loss = -(Y*np.log(A) + (1-Y)*np.log(1-A))
