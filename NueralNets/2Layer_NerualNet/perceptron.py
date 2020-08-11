@@ -21,19 +21,30 @@ class Perceptron:
         self.w2 = np.random.randn(self.outputNodes, self.hiddenLayerNodes)
 
     def predict(self):
+        print(self.b2)
+        print(self.b2.shape)
         z1 = np.dot(self.w1, self.features) + self.b1
+        print(z1)
+        print(z1.shape)
         a1 = np.zeros(z1.shape)
+        print(a1)
+        print(a1.shape)
         for i in range(len(z1)):
             for j in range(len(z1[0])):
                 a1[i][0] = sigmoid(z1[i][0])
-        print(a1)
         z2 = np.dot(self.w2, a1) + self.b2
+        print(z2)
+        print(z2.shape)
         a2 = sigmoid(z2)
         return a2
 
 
 if __name__ == '__main__':
-    inputs = np.array([0, 1, 1])
-    hidden = 4
-    myNeuralNet = Perceptron(inputs, hidden)
-    print(myNeuralNet.predict())
+    print("Choose your network")
+    choice = input("1. AND" + "\n" + "2. OR" + "3. XOR" + "\n" + "Enter choice: ")
+
+
+    # inputs = np.array([0, 1, 1])
+    # hidden = 4
+    # myNeuralNet = Perceptron(inputs, hidden)
+    # print(myNeuralNet.predict())

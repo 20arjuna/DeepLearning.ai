@@ -1,9 +1,18 @@
 import numpy as np
-from NueralNets.utils import sigmoid
-
+import math
 
 def load_data(filename):
     return np.genfromtxt(filename, delimiter=',')
+
+'''
+Computes the sigmoid functions with the given input
+
+@param x The input to the sigmoid function
+@return  The output of the sigmoid function given the param as input
+'''
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
 
 '''
 Makes a prediction given some inputs, weights, and bias
@@ -111,7 +120,7 @@ def gradient_descent(w, b, X, Y, iterations, alpha):
     return w, b
 
 if __name__ == '__main__':
-    myFile = load_data('pima-indians-diabetes.csv')
+    myFile = load_data('/Users/20arjuna/PycharmProjects/DeepLearning.ai/NueralNets/LogisticRegression/pima-indians-diabetes.csv')
 
     X_train = myFile[:384,:-1]
     Y_train = myFile[:384, -1]
@@ -125,7 +134,7 @@ if __name__ == '__main__':
     print(X_test[test_no])
     print(Y_test[test_no])
 
-    w = np.random.randn(features)
+    w = np.random.randn(features) * 0.01
     b = 0
 
     print("\n" + "weights: " + str(w))
@@ -133,7 +142,7 @@ if __name__ == '__main__':
     print("sample prediction: " + str(predict(X_test[test_no], w, b)))
     print("__________________________________________________________")
 
-    w, b = gradient_descent(w, b, X_train, Y_train, 1000, 0.01)
+    w, b = gradient_descent(w, b, X_train, Y_train, 1000, 0.001)
 
     print()
     print("weights: " + str(w))
