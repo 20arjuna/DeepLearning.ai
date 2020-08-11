@@ -19,12 +19,23 @@ Takes in a csv file and loads it into a numpy array
 @param filename The filepath of the csv file
 @return         A numpy array with the data
 '''
+
+
 def load_data(filename):
     return np.genfromtxt(filename, delimiter=',')
 
-'''
 
 '''
+Converts the data into an input (X) and output (Y) numpy 
+array. The input (X) is of dimensions (#inputs, #training examples)
+and the output (Y) is of dimensions (#outputs, #training examples)
+
+@param data The numpy array with the raw data (unprocessed)
+@return X   The input numpy array with dim = (#inputs, #training examples)
+@return Y   The output numpy array with dim = (#outpus, #training examples)
+'''
+
+
 def preprocess(data):
     X = []
     Y = []
@@ -38,6 +49,7 @@ def preprocess(data):
     Y = Y.reshape(1, len(Y))
 
     return X.T, Y
+
 
 class Perceptron:
     def __init__(self, features, hiddenLayerNodes):
