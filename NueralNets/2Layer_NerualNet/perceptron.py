@@ -79,19 +79,35 @@ class Perceptron:
         for i in range(len(z1)):
             for j in range(len(z1[0])):
                 a1[i][0] = sigmoid(z1[i][0])
+        print(a1)
+        # print(a1.T.shape)
+        # print(a1.T)
         z2 = np.dot(self.w2, a1) + self.b2
         # print(z2)
         # print(z2.shape)
         a2 = sigmoid(z2)
-        return a2
+        A = {"a1": a1.T.reshape(self.hiddenLayerNodes),
+             "a2": a2}
+        return A
 
     def get_prediction_matrix(self):
-        predictions = np.zeros([1, self.training_examples])
+        predictions = np.zeros(self.training_examples)
+        hiddenPredictions = np.zeros([self.training_examples, self.hiddenLayerNodes])
 
-        for i in range(len(predictions)):
-            predictions[i] = self.predict(self.X[i].reshape(len(X[i]), 1))
+        for i in range(self.training_examples):
+            print(i)
+            activations = self.predict(self.X[i].reshape(len(X[i]), 1))
+            hiddenPredictions[i] = activations["a1"]
+            predictions[i] = activations["a2"]
+
         print(predictions)
+        print()
+        print(hiddenPredictions.shape)
         return predictions
+
+    def train(self, training_iterations, alpha):
+        for i in range(training_iterations):
+            pass
 
 
 if __name__ == '__main__':
