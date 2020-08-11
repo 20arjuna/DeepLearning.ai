@@ -53,24 +53,26 @@ def preprocess(data):
 
 class Perceptron:
     def __init__(self, features, labels, hiddenLayerNodes):
-        self.features = features
+        self.X = features
+        self.Y = labels
+        self.training_examples = len(labels[0])
         self.hiddenLayerNodes = hiddenLayerNodes
         self.outputNodes = 1
         self.b1 = np.random.randn(self.hiddenLayerNodes, 1)
         self.b2 = np.random.randn(self.outputNodes, 1)
-        self.w1 = np.random.randn(self.hiddenLayerNodes, len(self.features[0]))
+        self.w1 = np.random.randn(self.hiddenLayerNodes, len(self.X[0]))
         self.w2 = np.random.randn(self.outputNodes, self.hiddenLayerNodes)
 
     def predict(self, inputs):
         # print(self.b2)
         # print(self.b2.shape)
 
-        print(self.w1.shape)
-        print(inputs.shape)
+        # print(self.w1.shape)
+        # print(inputs.shape)
 
         z1 = np.dot(self.w1, inputs) + self.b1
         # print(z1)
-        print(z1.shape)
+        #print(z1.shape)
         a1 = np.zeros(z1.shape)
         # print(a1)
         # print(a1.shape)
@@ -83,6 +85,14 @@ class Perceptron:
         a2 = sigmoid(z2)
         return a2
 
+    def get_prediction_matrix(self):
+        predictions = np.zeros([1, self.training_examples])
+
+        for i in range(len(predictions)):
+            predictions[i] = self.predict(self.X[i].reshape(len(X[i]), 1))
+        print(predictions)
+        return predictions
+
 
 if __name__ == '__main__':
     files = ["and.csv", "or.csv", "xor.csv"]
@@ -94,13 +104,14 @@ if __name__ == '__main__':
     # print(X)
     # print(Y)
 
-    arr = np.array([0, 1])
-    arr = arr.T
-    arr = arr.reshape(2,1)
+    # arr = np.array([0, 1])
+    # arr = arr.T
+    # arr = arr.reshape(2,1)
 
     myNeuralNet = Perceptron(X, Y, 2)
+    myNeuralNet.get_prediction_matrix()
 
-    print(myNeuralNet.predict(arr))
+    #print(myNeuralNet.predict(arr))
 
 
     # inputs = np.array([0, 1, 1])
