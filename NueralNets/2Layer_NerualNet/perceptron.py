@@ -7,8 +7,37 @@ Computes the sigmoid functions with the given input
 @param x The input to the sigmoid function
 @return  The output of the sigmoid function given the param as input
 '''
+
+
 def sigmoid(x):
     return 1 / (1 + math.exp(-x))
+
+
+'''
+Takes in a csv file and loads it into a numpy array
+
+@param filename The filepath of the csv file
+@return         A numpy array with the data
+'''
+def load_data(filename):
+    return np.genfromtxt(filename, delimiter=',')
+
+'''
+
+'''
+def preprocess(data):
+    X = []
+    Y = []
+
+    for training_example in data:
+        X.append(training_example[:-1].T)
+        Y.append(training_example[-1])
+
+    X = np.asarray(X, dtype=np.float32)
+    Y = np.asarray(Y, dtype=np.float32)
+    Y = Y.reshape(1, len(Y))
+
+    return X.T, Y
 
 class Perceptron:
     def __init__(self, features, hiddenLayerNodes):
@@ -40,8 +69,17 @@ class Perceptron:
 
 
 if __name__ == '__main__':
+    files = ["and.csv", "or.csv", "xor.csv"]
     print("Choose your network")
-    choice = input("1. AND" + "\n" + "2. OR" + "3. XOR" + "\n" + "Enter choice: ")
+    choice = int(input("1. AND" + "\n" + "2. OR" + "\n" + "3. XOR" + "\n" + "Enter choice: "))
+    myFile = load_data(files[choice-1])
+
+    X, Y = preprocess(myFile)
+    X = np.asarray(X, dtype=np.float32)
+    Y = np.asarray(Y, dtype=np.float32)
+    print()
+    print(X)
+    print(Y)
 
 
     # inputs = np.array([0, 1, 1])
