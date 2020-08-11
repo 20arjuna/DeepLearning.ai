@@ -53,20 +53,24 @@ def preprocess(data):
 
 class Perceptron:
     def __init__(self, features, labels, hiddenLayerNodes):
-        self.features = features.reshape(len(features),1)
+        self.features = features
         self.hiddenLayerNodes = hiddenLayerNodes
         self.outputNodes = 1
         self.b1 = np.random.randn(self.hiddenLayerNodes, 1)
         self.b2 = np.random.randn(self.outputNodes, 1)
-        self.w1 = np.random.randn(self.hiddenLayerNodes, len(features))
+        self.w1 = np.random.randn(self.hiddenLayerNodes, len(self.features[0]))
         self.w2 = np.random.randn(self.outputNodes, self.hiddenLayerNodes)
 
-    def predict(self):
+    def predict(self, inputs):
         # print(self.b2)
         # print(self.b2.shape)
-        z1 = np.dot(self.w1, self.features) + self.b1
+
+        print(self.w1.shape)
+        print(inputs.shape)
+
+        z1 = np.dot(self.w1, inputs) + self.b1
         # print(z1)
-        # print(z1.shape)
+        print(z1.shape)
         a1 = np.zeros(z1.shape)
         # print(a1)
         # print(a1.shape)
@@ -87,11 +91,16 @@ if __name__ == '__main__':
     myFile = load_data(files[choice-1])
 
     X, Y = preprocess(myFile)
-    print(X)
-    print(Y)
+    # print(X)
+    # print(Y)
+
+    arr = np.array([0, 1])
+    arr = arr.T
+    arr = arr.reshape(2,1)
 
     myNeuralNet = Perceptron(X, Y, 2)
-    myNeuralNet
+
+    print(myNeuralNet.predict(arr))
 
 
     # inputs = np.array([0, 1, 1])
