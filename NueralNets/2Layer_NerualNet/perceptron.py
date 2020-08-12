@@ -127,18 +127,22 @@ class Perceptron:
             self.b1 -= alpha * db1
             self.w2 -= alpha * dW2
             self.b2 -= alpha * db2
-        print(self.w1)
-        print(self.w1.shape)
-        print(self.w2)
-        print(self.w2.shape)
+        # print(self.w1)
+        # print(self.w1.shape)
+        # print(self.w2)
+        # print(self.w2.shape)
 
     def predict(self, inputs):
-        a1 = np.dot(inputs, self.w1) + self.b1
+        print(inputs.shape)
+        print(self.w1.shape)
+        print(self.b1)
+        a1 = np.dot(inputs, self.w1)
         for i in range(len(a1)):
             for j in range(len(a1[0])):
                 a1[i][j] = sigmoid(a1[i][j])
 
-        a2 = np.dot(a1, self.w2) + self.b2
+        print(a1.shape)
+        a2 = np.dot(a1, self.w2.T)
         for r in range(len(a2)):
             for j in range(len(a2[0])):
                 a2[i][j] = sigmoid(a2[i][j])
@@ -162,11 +166,11 @@ if __name__ == '__main__':
     # arr = arr.reshape(2,1)
 
     myNeuralNet = Perceptron(X, Y, 2)
-    myNeuralNet.train(1000, 1.2)
-    testArray = np.array([0,1])
+    myNeuralNet.train(1000, 1)
+    testArray = np.array([1,0])
     testArray = testArray.reshape(1, len(testArray))
 
-    #print(myNeuralNet.predict(testArray))
+    print(myNeuralNet.predict(testArray))
 
     #print(myNeuralNet.predict(arr))
 
