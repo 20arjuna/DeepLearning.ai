@@ -13,6 +13,9 @@ def sigmoid(x):
     return 1 / (1 + math.exp(-x))
 
 
+def sigmoid_derivative(x):
+    return sigmoid(x) * (1-sigmoid(x))
+
 '''
 Takes in a csv file and loads it into a numpy array
 
@@ -46,7 +49,7 @@ def preprocess(data):
 
     X = np.asarray(X, dtype=np.float32)
     Y = np.asarray(Y, dtype=np.float32)
-    Y = Y.reshape(1, len(Y))
+    # Y = Y.reshape(1, len(Y))
 
     return X, Y
 
@@ -79,7 +82,7 @@ class Perceptron:
         for i in range(len(z1)):
             for j in range(len(z1[0])):
                 a1[i][0] = sigmoid(z1[i][0])
-        print(a1)
+        #print(a1)
         # print(a1.T.shape)
         # print(a1.T)
         z2 = np.dot(self.w2, a1) + self.b2
@@ -95,19 +98,31 @@ class Perceptron:
         hiddenPredictions = np.zeros([self.training_examples, self.hiddenLayerNodes])
 
         for i in range(self.training_examples):
-            print(i)
+            #print(i)
             activations = self.predict(self.X[i].reshape(len(X[i]), 1))
             hiddenPredictions[i] = activations["a1"]
             predictions[i] = activations["a2"]
 
-        print(predictions)
-        print()
         print(hiddenPredictions.shape)
-        return predictions
+        print(predictions.shape)
+        return hiddenPredictions, predictions
 
     def train(self, training_iterations, alpha):
         for i in range(training_iterations):
-            pass
+            A1, A2 = self.get_prediction_matrix()
+
+            dZ2 = A2 - self.Y
+            dW2 = (1/self.training_examples) * np.dot(dZ2, A1)
+            db2 = (1/self.training_examples) * np.sum(dZ2, axis=1, keepdims=True)
+
+            dZ1 = np.multiply(np.dot(self.w2.T, dZ2), 1 - np.power(A1, 2))
+            dW1 = (1 / self.training_examples) * np.dot(dZ1, X.T)
+            db1 = (1 / self.training_examples) * np.sum(dZ1, axis=1, keepdims=True)
+
+            self.w1 -= alpha * dW1
+            self.b1 -= alpha * db1
+            self.w2 -= alpha * dW2
+            self.b2 -= alpha * db2
 
 
 if __name__ == '__main__':
