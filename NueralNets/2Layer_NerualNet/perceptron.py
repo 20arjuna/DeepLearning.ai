@@ -58,7 +58,8 @@ class Perceptron:
     def __init__(self, features, labels, hiddenLayerNodes):
         self.X = features
         self.Y = labels
-        self.training_examples = len(labels[0])
+        self.training_examples = labels.size
+        print(self.training_examples)
         self.hiddenLayerNodes = hiddenLayerNodes
         self.outputNodes = 1
         self.b1 = np.random.randn(self.hiddenLayerNodes, 1)
@@ -66,7 +67,7 @@ class Perceptron:
         self.w1 = np.random.randn(self.hiddenLayerNodes, len(self.X[0]))
         self.w2 = np.random.randn(self.outputNodes, self.hiddenLayerNodes)
 
-    def predict(self, inputs):
+    def forward_prop(self, inputs):
         # print(self.b2)
         # print(self.b2.shape)
 
@@ -86,8 +87,8 @@ class Perceptron:
         # print(a1.T.shape)
         # print(a1.T)
         z2 = np.dot(self.w2, a1) + self.b2
-        # print(z2)
-        # print(z2.shape)
+        #print(self.w2)
+        #print(self.w2.shape)
         a2 = sigmoid(z2)
         A = {"a1": a1.T.reshape(self.hiddenLayerNodes),
              "a2": a2}
@@ -99,30 +100,51 @@ class Perceptron:
 
         for i in range(self.training_examples):
             #print(i)
-            activations = self.predict(self.X[i].reshape(len(X[i]), 1))
+            activations = self.forward_prop(self.X[i].reshape(len(X[i]), 1))
             hiddenPredictions[i] = activations["a1"]
             predictions[i] = activations["a2"]
 
-        print(hiddenPredictions.shape)
-        print(predictions.shape)
-        return hiddenPredictions, predictions
+        #print(hiddenPredictions.shape)
+        #print(predictions.shape)
+        return hiddenPredictions, predictions.reshape(1, len(predictions))
 
     def train(self, training_iterations, alpha):
         for i in range(training_iterations):
+            print("iteration #: " + str(i))
             A1, A2 = self.get_prediction_matrix()
 
             dZ2 = A2 - self.Y
             dW2 = (1/self.training_examples) * np.dot(dZ2, A1)
             db2 = (1/self.training_examples) * np.sum(dZ2, axis=1, keepdims=True)
 
-            dZ1 = np.multiply(np.dot(self.w2.T, dZ2), 1 - np.power(A1, 2))
-            dW1 = (1 / self.training_examples) * np.dot(dZ1, X.T)
+            dZ1 = np.multiply(np.dot(self.w2.T, dZ2), 1 - np.power(A1.T, 2))
+            dW1 = (1 / self.training_examples) * np.dot(dZ1, X)
             db1 = (1 / self.training_examples) * np.sum(dZ1, axis=1, keepdims=True)
 
+            # print(self.w2.shape)
+            # print(dW2.shape)
             self.w1 -= alpha * dW1
             self.b1 -= alpha * db1
             self.w2 -= alpha * dW2
             self.b2 -= alpha * db2
+        print(self.w1)
+        print(self.w1.shape)
+        print(self.w2)
+        print(self.w2.shape)
+
+    def predict(self, inputs):
+        a1 = np.dot(inputs, self.w1) + self.b1
+        for i in range(len(a1)):
+            for j in range(len(a1[0])):
+                a1[i][j] = sigmoid(a1[i][j])
+
+        a2 = np.dot(a1, self.w2) + self.b2
+        for r in range(len(a2)):
+            for j in range(len(a2[0])):
+                a2[i][j] = sigmoid(a2[i][j])
+
+        return a2
+
 
 
 if __name__ == '__main__':
@@ -140,7 +162,11 @@ if __name__ == '__main__':
     # arr = arr.reshape(2,1)
 
     myNeuralNet = Perceptron(X, Y, 2)
-    myNeuralNet.get_prediction_matrix()
+    myNeuralNet.train(1000, 1.2)
+    testArray = np.array([0,1])
+    testArray = testArray.reshape(1, len(testArray))
+
+    #print(myNeuralNet.predict(testArray))
 
     #print(myNeuralNet.predict(arr))
 
