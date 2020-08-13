@@ -59,13 +59,12 @@ class Perceptron:
         self.X = features
         self.Y = labels
         self.training_examples = labels.size
-        print(self.training_examples)
         self.hiddenLayerNodes = hiddenLayerNodes
         self.outputNodes = 1
         self.b1 = np.random.randn(self.hiddenLayerNodes, 1)
         self.b2 = np.random.randn(self.outputNodes, 1)
-        self.w1 = np.random.randn(self.hiddenLayerNodes, len(self.X[0]))
-        self.w2 = np.random.randn(self.outputNodes, self.hiddenLayerNodes)
+        self.w1 = np.random.rand(self.hiddenLayerNodes, len(self.X[0]))
+        self.w2 = np.random.rand(self.outputNodes, self.hiddenLayerNodes)
 
     def forward_prop(self, inputs):
         # print(self.b2)
@@ -82,7 +81,7 @@ class Perceptron:
         # print(a1.shape)
         for i in range(len(z1)):
             for j in range(len(z1[0])):
-                a1[i][0] = sigmoid(z1[i][0])
+                a1[i][0] = np.tanh(z1[i][0])
         #print(a1)
         # print(a1.T.shape)
         # print(a1.T)
@@ -112,8 +111,12 @@ class Perceptron:
         for i in range(training_iterations):
             print("iteration #: " + str(i))
             A1, A2 = self.get_prediction_matrix()
-
+            print(A1.shape) #(4,2)
+            print(A2.shape) #(1,4)
+            print(self.X.shape) #(4,2)
+            print(self.Y.shape) #(4,)
             dZ2 = A2 - self.Y
+            print(dZ2.shape) #(1,4)
             dW2 = (1/self.training_examples) * np.dot(dZ2, A1)
             db2 = (1/self.training_examples) * np.sum(dZ2, axis=1, keepdims=True)
 
@@ -133,15 +136,15 @@ class Perceptron:
         # print(self.w2.shape)
 
     def predict(self, inputs):
-        print(inputs.shape)
-        print(self.w1.shape)
-        print(self.b1)
+        # print(inputs.shape)
+        # print(self.w1.shape)
+        # print(self.b1)
         a1 = np.dot(inputs, self.w1)
         for i in range(len(a1)):
             for j in range(len(a1[0])):
-                a1[i][j] = sigmoid(a1[i][j])
+                a1[i][j] = np.tanh(a1[i][j])
 
-        print(a1.shape)
+        #print(a1.shape)
         a2 = np.dot(a1, self.w2.T)
         for r in range(len(a2)):
             for j in range(len(a2[0])):
@@ -166,7 +169,7 @@ if __name__ == '__main__':
     # arr = arr.reshape(2,1)
 
     myNeuralNet = Perceptron(X, Y, 2)
-    myNeuralNet.train(1000, 1)
+    myNeuralNet.train(1000, 0.001)
     testArray = np.array([1,0])
     testArray = testArray.reshape(1, len(testArray))
 
