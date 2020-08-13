@@ -69,10 +69,12 @@ class Perceptron:
     def forward_prop(self, inputs):
         # print(self.b2)
         # print(self.b2.shape)
-
-        # print(self.w1.shape)
+        print("w1 shape")
+        print(self.w1.shape)
         # print(inputs.shape)
-
+        print("np.dot")
+        print(np.dot(self.w1, inputs).shape)
+        print(self.b1.shape)
         z1 = np.dot(self.w1, inputs) + self.b1
         # print(z1)
         #print(z1.shape)
@@ -81,11 +83,12 @@ class Perceptron:
         # print(a1.shape)
         for i in range(len(z1)):
             for j in range(len(z1[0])):
-                a1[i][0] = np.tanh(z1[i][0])
+                a1[i][j] = np.tanh(z1[i][j])
         #print(a1)
         # print(a1.T.shape)
-        # print(a1.T)
-        z2 = np.dot(self.w2, a1) + self.b2
+        # print
+        print(np.matmul(self.w2, a1).shape)
+        z2 = np.matmul(self.w2, a1) + self.b2
         #print(self.w2)
         #print(self.w2.shape)
         a2 = sigmoid(z2)
@@ -115,13 +118,13 @@ class Perceptron:
             print(A2.shape) #(1,4)
             print(self.X.shape) #(4,2)
             print(self.Y.shape) #(4,)
-            dZ2 = A2 - self.Y
+            dZ2 = A2.T - self.Y
             print(dZ2.shape) #(1,4)
-            dW2 = (1/self.training_examples) * np.dot(dZ2, A1)
+            dW2 = (1/self.training_examples) * np.dot(dZ2, A1.T)
             db2 = (1/self.training_examples) * np.sum(dZ2, axis=1, keepdims=True)
 
             dZ1 = np.multiply(np.dot(self.w2.T, dZ2), 1 - np.power(A1.T, 2))
-            dW1 = (1 / self.training_examples) * np.dot(dZ1, X)
+            dW1 = (1 / self.training_examples) * np.dot(dZ1, X.T)
             db1 = (1 / self.training_examples) * np.sum(dZ1, axis=1, keepdims=True)
 
             # print(self.w2.shape)
@@ -136,19 +139,23 @@ class Perceptron:
         # print(self.w2.shape)
 
     def predict(self, inputs):
-        # print(inputs.shape)
-        # print(self.w1.shape)
-        # print(self.b1)
-        a1 = np.dot(inputs, self.w1)
+        print("inputs")
+        print(inputs.shape)
+        print(self.w1.shape)
+        print(self.b1.shape) #(2,1)
+
+        a1 = np.dot(inputs, self.w1).T + self.b1
         for i in range(len(a1)):
             for j in range(len(a1[0])):
                 a1[i][j] = np.tanh(a1[i][j])
-
-        #print(a1.shape)
-        a2 = np.dot(a1, self.w2.T)
+        print("a1 shape")
+        print(a1.shape) #(2,1)
+        print(self.b2.shape) #(1,1)
+        a2 = np.matmul(self.w2, a1) + self.b2
+        #a2 = np.dot(a1.T, self.w2.T) + self.b2
         for r in range(len(a2)):
-            for j in range(len(a2[0])):
-                a2[i][j] = sigmoid(a2[i][j])
+            for c in range(len(a2[0])):
+                a2[r][c] = sigmoid(a2[r][c])
 
         return a2
 
